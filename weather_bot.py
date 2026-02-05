@@ -3,15 +3,14 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 
-# ================= 配置区域 (WxPusher版) =================
-# 从环境变量读取 Token 和 UID
-WXPUSHER_TOKEN = os.environ.get("WXPUSHER_TOKEN")
-WXPUSHER_UID = os.environ.get("WXPUSHER_UID")
+# ================= 配置区域 (群机器人版) =================
+# 从环境变量读取 Webhook URL
+WEBHOOK_URL = os.environ.get("WECHAT_WEBHOOK_URL")
 # =======================================================
 
 def get_weather():
     """
-    爬虫函数：抓取成都天气 (代码逻辑不变)
+    爬虫函数：抓取成都天气
     """
     print("🕷️ 正在爬取天气数据...")
     url = "http://www.weather.com.cn/weather/101270101.shtml"
@@ -31,56 +30,53 @@ def get_weather():
         low_temp = today_node.find('i').text
         wind = today_node.find('p', class_='win').find('i').text
 
-        # WxPusher 支持 Markdown，我们可以把字变漂亮点
-        # <br> 是换行，**文字** 是加粗
-        report = f"""
-📅 **日期**：{date}
-🌍 **城市**：成都 (UESTC)
-🌤️ **天气**：{weather}
-🌡️ **温度**：{low_temp} ~ {high_temp}
-🌬️ **风力**：{wind}
+        # 群机器人支持 Markdown 格式
+        # <font color="info">绿色</font> <font color="comment">灰色</font> <font color="warning">橙红色</font>
+        report = f"""### 📅 成都天气日报
+> 日期：<font color="comment">{date}</font>
+> 城市：<font color="info">成都 (UESTC)</font>
+> 天气：**{weather}**
+> 温度：<font color="warning">{low_temp} ~ {high_temp}</font>
+> 风力：{wind}
 
-<span style="color:grey;font-size:12px">来自 GitHub Actions 自动播报</span>
-        """
+<font color="comment">By GitHub Actions</font>"""
         return report
 
     except Exception as e:
         print(f"❌ 爬虫出错了: {e}")
         return None
 
-def send_wxpusher(content):
+def send_group_bot(content):
     """
-    使用 WxPusher 发送消息
+    使用群机器人 Webhook 发送
     """
-    print("🚀 正在通过 WxPusher 发送...")
+    print("🚀 正在请求群机器人接口...")
     
-    url = "https://wxpusher.zjiecode.com/api/send/message"
+    if not WEBHOOK_URL:
+        print("❌ 错误：未找到 Webhook URL，请检查 GitHub Secrets！")
+        return
+
+    # 构造数据包
     data = {
-        "appToken": WXPUSHER_TOKEN,
-        "content": content,
-        "summary": "📅 每日天气提醒",  # 这是消息卡片上显示的标题
-        "contentType": 2,             # 2 表示 HTML/Markdown 格式
-        "uids": [WXPUSHER_UID]        # 发送目标
+        "msgtype": "markdown",
+        "markdown": {
+            "content": content
+        }
     }
     
     try:
-        res = requests.post(url, json=data).json()
-        if res['success']:
+        # 直接 POST 那个长链接，不需要 Token
+        res = requests.post(WEBHOOK_URL, json=data).json()
+        if res['errcode'] == 0:
             print("✅ 发送成功！")
         else:
-            print(f"❌ 发送失败: {res['msg']}")
+            print(f"❌ 发送失败: {res['errmsg']}")
     except Exception as e:
         print(f"❌ 请求错误: {e}")
 
 if __name__ == "__main__":
-    # 1. 爬数据
     weather_info = get_weather()
-    
-    # 2. 如果爬到了，就发
     if weather_info:
-        print("-" * 30)
-        print(weather_info)
-        print("-" * 30)
-        send_wxpusher(weather_info)
+        send_group_bot(weather_info)
     else:
-        print("今天爬虫罢工了，没获取到数据。")
+        print("没爬到数据")
