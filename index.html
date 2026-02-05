@@ -1,134 +1,163 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oukai's Space | UESTC</title>
+    <title>Oukai's Portfolio | UESTC</title>
     <style>
         :root {
-            --bg-color: #0f172a; /* 深蓝黑背景 */
-            --card-bg: #1e293b;   /* 卡片背景 */
-            --text-main: #e2e8f0; /* 主要文字 */
-            --text-muted: #94a3b8; /* 次要文字 */
-            --accent: #38bdf8;    /* 科技蓝亮色 */
-            --highlight: #f472b6; /* 稍微带点粉色，致敬二次元 */
+            /* 赛博朋克深色主题 */
+            --bg-color: #0a0e17;    /* 更深的背景 */
+            --card-bg: #151b2b;     /* 卡片背景 */
+            --text-main: #e2e8f0;   /* 主要文字 */
+            --text-muted: #8b949e;  /* 次要文字 */
+            --accent: #58a6ff;      /* 科技蓝 */
+            --highlight: #f0883e;   /* 强调色(橙) */
+            --border-color: #30363d;/* 边框色 */
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             line-height: 1.6;
+            background-image: radial-gradient(circle at top center, #1a2332 0%, var(--bg-color) 70%); /* 背景微光 */
         }
 
         .container {
-            max-width: 800px;
-            width: 90%;
-            padding: 40px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
         }
 
         /* 头部区域 */
         header {
             text-align: center;
             margin-bottom: 60px;
-            animation: fadeIn Down 1s ease-out;
+            animation: fadeIn Down 0.8s ease-out;
         }
 
         .avatar {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            border: 4px solid var(--accent);
-            padding: 4px;
+            border: 3px solid var(--accent);
+            padding: 5px;
             margin-bottom: 20px;
             object-fit: cover;
-            /* 这里放一个临时的头像占位符，你可以换成自己的 */
-            background-image: url('https://api.dicebear.com/7.x/avataaars/svg?seed=Oukai'); 
+            /* 新的头像：更干净、现代的插画风格 */
+            background-image: url('https://api.dicebear.com/7.x/micah/svg?seed=Oukai&backgroundColor=151b2b&baseColor=f0883e'); 
             background-size: cover;
             display: inline-block;
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin: 10px 0;
-            background: linear-gradient(to right, var(--accent), var(--highlight));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
         }
 
         .tagline {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace; /* 代码风格字体 */
         }
 
-        /* 卡片区域 */
+        .accent-text { color: var(--accent); }
+
+        /* 语言分割标题 */
+        .lang-separator {
+            display: flex;
+            align-items: center;
+            margin: 50px 0 30px;
+            color: var(--text-muted);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .lang-separator::before, .lang-separator::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+            margin: 0 15px;
+        }
+
+        /* 卡片网格 */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* 卡片更宽一点 */
+            gap: 25px;
         }
 
+        /* 卡片样式 */
         .card {
             background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(to right, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-            border-color: var(--accent);
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
+            border-color: var(--text-muted);
         }
+        .card:hover::before { opacity: 1; }
 
         h2 {
-            color: var(--accent);
-            border-bottom: 2px solid rgba(56, 189, 248, 0.2);
-            padding-bottom: 10px;
+            color: var(--text-main);
             margin-top: 0;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            margin-bottom: 10px;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
         }
+        h2 span.icon { margin-right: 10px; }
 
-        li::before {
-            content: "▹";
-            color: var(--highlight);
-            margin-right: 10px;
-            font-weight: bold;
+        /* 列表样式 */
+        ul.skill-list, ul.project-list {
+            list-style: none;
+            padding: 0;
         }
+        ul.skill-list li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+        }
+        ul.skill-list li strong { color: var(--accent); margin-right: 8px; min-width: 90px;}
 
-        /* 底部 */
+        ul.project-list li {
+            margin-bottom: 15px;
+            border-left: 3px solid var(--border-color);
+            padding-left: 15px;
+        }
+        ul.project-list li strong { display: block; color: var(--highlight); margin-bottom: 4px; }
+        ul.project-list li span { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* 链接和底部 */
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
         footer {
             text-align: center;
-            margin-top: 60px;
+            margin-top: 80px;
             color: var(--text-muted);
             font-size: 0.9rem;
-        }
-
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        a:hover {
-            color: var(--highlight);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
         }
 
         /* 简单的入场动画 */
@@ -136,56 +165,116 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .fade-in { animation: fadeIn 0.6s ease-out backwards; }
+
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <div class="avatar"></div> <h1>Oukai</h1>
-            <p class="tagline">UESTC · School of IC Science & Engineering<br>探索物理与代码的边界</p>
+            <div class="avatar"></div>
+            <h1>Oukai</h1>
+            <p class="tagline">> UESTC / IC Engineering / Python Developer_</p>
         </header>
 
+        <div class="lang-separator">🇬🇧 ENGLISH PROFILE</div>
+        
         <div class="grid">
-            <div class="card" style="animation: fadeIn 0.5s ease-out 0.2s backwards;">
-                <h2>👨‍💻 About Me</h2>
-                <p>你好，我是 Oukai。目前在<b>电子科技大学 (UESTC)</b> 就读集成电路设计专业。</p>
-                <p>热衷于半导体物理、微电子技术，同时也是一名正在进阶的 Python 开发者。</p>
-                <p>“给岁月以文明，给时光以生命。”</p>
+            <div class="card fade-in" style="animation-delay: 0.1s;">
+                <h2><span class="icon">👨‍💻</span>Introduction</h2>
+                <p>Hello, I'm Oukai. An undergraduate student majoring in <b>Integrated Circuit Design</b> at <b>UESTC</b> (University of Electronic Science and Technology of China).</p>
+                <p>I stand at the intersection of hardware physics and software logic. Passionate about microelectronics, automation tools, and exploring the frontiers of technology.</p>
             </div>
 
-            <div class="card" style="animation: fadeIn 0.5s ease-out 0.4s backwards;">
-                <h2>🛠️ Skills & Tools</h2>
-                <ul>
-                    <li><b>Languages:</b> C, Python, Verilog</li>
-                    <li><b>Engineering:</b> HFSS (Antenna Sim), Circuit Design</li>
-                    <li><b>Tools:</b> GitHub Actions, VS Code</li>
-                    <li><b>Hobbies:</b> 自动化脚本开发</li>
+            <div class="card fade-in" style="animation-delay: 0.2s;">
+                <h2><span class="icon">🎓</span>Education</h2>
+                <ul class="project-list" style="border: none; padding: 0;">
+                    <li style="border: none; padding: 0; margin-bottom: 20px;">
+                        <strong style="color: var(--text-main); font-size: 1.1rem;">University of Electronic Science and Technology of China (UESTC)</strong>
+                        <span>B.Eng. in Integrated Circuit Design & Integrated System</span><br>
+                        <span style="color: var(--accent);">202x - Present</span>
+                    </li>
+                    <li>Relevant Coursework: Semiconductor Physics, Digital/Analog Circuit Design, Signals and Systems.</li>
                 </ul>
             </div>
 
-            <div class="card" style="animation: fadeIn 0.5s ease-out 0.6s backwards;">
-                <h2>🎮 Interests</h2>
-                <ul>
-                    <li><b>Games:</b> Battlefield V, Cyberpunk 2077, Genshin Impact</li>
-                    <li><b>ACG:</b> 喜欢画风可爱的番剧和 Galgame</li>
-                    <li><b>Music:</b> 日系女声 / ACG 音乐</li>
-                    <li><b>Reading:</b> 《三体》 / 科幻文学</li>
+             <div class="card fade-in" style="animation-delay: 0.3s;">
+                <h2><span class="icon">🛠️</span>Tech Stack</h2>
+                <ul class="skill-list">
+                    <li><strong>Languages:</strong> Python, C/C++, Verilog HDL</li>
+                    <li><strong>Hardware:</strong> FPGA based design, Circuit Simulation</li>
+                    <li><strong>Tools:</strong> VS Code, Git & GitHub Actions, Linux</li>
                 </ul>
             </div>
 
-            <div class="card" style="animation: fadeIn 0.5s ease-out 0.8s backwards;">
-                <h2>📬 Connect</h2>
-                <ul>
-                    <li><b>GitHub:</b> <a href="https://github.com/oukai0529">@oukai0529</a></li>
-                    <li><b>Email:</b> <a href="mailto:2387993145@qq.com">Send Email</a></li>
-                    <li><b>Location:</b> Chengdu, China</li>
+             <div class="card fade-in" style="animation-delay: 0.4s;">
+                <h2><span class="icon">🚀</span>Projects & Labs</h2>
+                <ul class="project-list">
+                    <li>
+                        <strong>Automated Weather Notification Bot</strong>
+                        <span>A serverless Python bot deployed on GitHub Actions, using APIs to fetch weather data and push via Email/WeChat.</span>
+                    </li>
+                    <li>
+                        <strong>Digital Logic Design Labs</strong>
+                        <span>Implemented basic CPU components (ALU, Register File) using Verilog in course labs.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="lang-separator">🇨🇳 中文介绍</div>
+        
+        <div class="grid">
+            <div class="card fade-in" style="animation-delay: 0.5s;">
+                <h2><span class="icon">👋</span>关于我</h2>
+                <p>你好，我是 Oukai。目前就读于<b>电子科技大学 (UESTC)</b>，主修<b>集成电路设计与集成系统</b>专业。</p>
+                <p>游走在硬件物理与软件逻辑的边界。热衷于探索微电子技术，同时也喜爱编写自动化工具来提升效率。</p>
+            </div>
+
+            <div class="card fade-in" style="animation-delay: 0.6s;">
+                <h2><span class="icon">🏫</span>教育背景</h2>
+                 <ul class="project-list" style="border: none; padding: 0;">
+                    <li style="border: none; padding: 0; margin-bottom: 20px;">
+                        <strong style="color: var(--text-main); font-size: 1.1rem;">电子科技大学 (UESTC)</strong>
+                        <span>工学学士 · 集成电路设计与集成系统</span><br>
+                        <span style="color: var(--accent);">202x - 至今</span>
+                    </li>
+                    <li>核心课程：半导体物理、数字/模拟集成电路设计、信号与系统等。</li>
+                </ul>
+            </div>
+
+             <div class="card fade-in" style="animation-delay: 0.7s;">
+                <h2><span class="icon">⚡</span>技术栈</h2>
+                <ul class="skill-list">
+                    <li><strong>编程语言：</strong> Python, C/C++, Verilog HDL</li>
+                    <li><strong>硬件方向：</strong> 基于 FPGA 的设计基础, 电路仿真</li>
+                    <li><strong>开发工具：</strong> VS Code, Git & GitHub Actions, Linux 环境</li>
+                </ul>
+            </div>
+
+             <div class="card fade-in" style="animation-delay: 0.8s;">
+                <h2><span class="icon">💻</span>项目与实践</h2>
+                <ul class="project-list">
+                    <li>
+                        <strong>每日天气自动化助手 (Python)</strong>
+                        <span>基于 GitHub Actions 的无服务器应用。调用第三方气象 API，实现每日定时通过邮件/微信推送详尽天气报告。</span>
+                    </li>
+                    <li>
+                        <strong>数字逻辑设计实验 (Verilog)</strong>
+                        <span>在课程实验中使用 Verilog HDL 实现基础 CPU 组件（如算术逻辑单元 ALU、寄存器堆等）。</span>
+                    </li>
                 </ul>
             </div>
         </div>
 
         <footer>
-            <p>© 2026 Oukai. Built with ❤️ and Python.</p>
+            <p>
+                📬 Contact: <a href="mailto:YOUR_EMAIL@qq.com">Email Me</a> | 
+                🐙 GitHub: <a href="https://github.com/oukai0529" target="_blank">@oukai0529</a>
+            </p>
+            <p style="margin-top: 10px; opacity: 0.6;">© 2026 Oukai. Designed for the dark mode lovers.</p>
         </footer>
     </div>
 
