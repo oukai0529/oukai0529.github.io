@@ -29,6 +29,5 @@ jobs:
       - name: 🚀 运行天气脚本
         env:
           # 把“保险箱”里的密码注入到环境变量里
-          WXPUSHER_TOKEN: ${{ secrets.WXPUSHER_TOKEN }}
-          WXPUSHER_UID: ${{ secrets.WXPUSHER_UID }}
+          WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
         run: python weather_bot.py
