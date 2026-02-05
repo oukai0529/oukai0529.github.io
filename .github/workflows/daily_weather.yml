@@ -29,5 +29,6 @@ jobs:
       - name: 🚀 运行天气脚本
         env:
           # 把“保险箱”里的密码注入到环境变量里
-          WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
         run: python weather_bot.py
