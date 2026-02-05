@@ -31,4 +31,5 @@ jobs:
           # 把“保险箱”里的密码注入到环境变量里
           MAIL_USER: ${{ secrets.MAIL_USER }}
           MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          QWEATHER_KEY: ${{ secrets.QWEATHER_KEY }}
         run: python weather_bot.py
