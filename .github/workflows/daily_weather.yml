@@ -1,6 +1,6 @@
 name: 每日天气推送
 
-on:
+于:
   schedule:
     # 每天北京时间早上 07:00 运行
     # (GitHub 用的是 UTC 时间，北京是 UTC+8，所以 07:00 - 8 = 23:00 前一天)
@@ -29,7 +29,6 @@ jobs:
       - name: 🚀 运行天气脚本
         env:
           # 把“保险箱”里的密码注入到环境变量里
-          CORP_ID: ${{ secrets.CORP_ID }}
-          CORP_SECRET: ${{ secrets.CORP_SECRET }}
-          AGENT_ID: ${{ secrets.AGENT_ID }}
+          WXPUSHER_TOKEN: ${{ secrets.WXPUSHER_TOKEN }}
+          WXPUSHER_UID: ${{ secrets.WXPUSHER_UID }}
         run: python weather_bot.py
