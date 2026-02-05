@@ -1,0 +1,35 @@
+name: 每日天气推送
+
+on:
+  schedule:
+    # 每天北京时间早上 07:00 运行
+    # (GitHub 用的是 UTC 时间，北京是 UTC+8，所以 07:00 - 8 = 23:00 前一天)
+    - cron: '0 23 * * *'
+  
+  # 允许你手动点击按钮来测试 (Workflow Dispatch)
+  workflow_dispatch:
+
+jobs:
+  send-weather:
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu 虚拟机
+    
+    steps:
+      - name: 📥 拉取代码
+        uses: actions/checkout@v3
+      
+      - name: 🐍 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: 📦 安装依赖库
+        run: |
+          pip install requests beautifulsoup4
+          
+      - name: 🚀 运行天气脚本
+        env:
+          # 把“保险箱”里的密码注入到环境变量里
+          CORP_ID: ${{ secrets.CORP_ID }}
+          CORP_SECRET: ${{ secrets.CORP_SECRET }}
+          AGENT_ID: ${{ secrets.AGENT_ID }}
+        run: python weather_bot.py
