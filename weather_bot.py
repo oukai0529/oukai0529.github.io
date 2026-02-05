@@ -11,7 +11,7 @@ MAIL_USER = os.environ.get("MAIL_USER")
 MAIL_PASS = os.environ.get("MAIL_PASS")
 
 # 发给谁 (可以写多个)
-RECEIVERS = ["你的号@qq.com"] 
+RECEIVERS = ["2387993145@qq.com"] 
 # =======================================================
 
 def get_weather():
@@ -101,3 +101,4 @@ if __name__ == "__main__":
         send_email(weather_info)
     else:
         print("没爬到数据")
+
