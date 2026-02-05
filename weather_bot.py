@@ -9,8 +9,11 @@ from email.utils import formataddr
 MAIL_USER = os.environ.get("MAIL_USER")
 MAIL_PASS = os.environ.get("MAIL_PASS")
 QWEATHER_KEY = os.environ.get("QWEATHER_KEY") 
-RECEIVERS = ["1770255772@qq.com"]  # 你的QQ邮箱
+RECEIVERS = ["2387993145@qq.com"]  # 你的QQ邮箱
 LOCATION_ID = "101270101" # 成都
+
+# 🌟 你的专属 API Host (这是关键修改！)
+API_HOST = "https://pv6tuq6kxt.re.qweatherapi.com"
 # ===========================================
 
 def get_weather_data():
@@ -19,28 +22,17 @@ def get_weather_data():
     if not QWEATHER_KEY:
         print("❌ 错误：未找到 QWEATHER_KEY，请检查 GitHub Secrets")
         return None
-        
-   # ... 前面的代码不变 ...
 
-    # 你的专属 Host (注意：要加上 https://)
-    API_HOST = "https://pv6tuq6kxt.re.qweatherapi.com"
-
-    # 1. 获取【实时天气】
+    # 使用你的专属 Host 拼接 URL
     url_now = f"{API_HOST}/v7/weather/now?location={LOCATION_ID}&key={QWEATHER_KEY}"
-    
-    # 2. 获取【今天的天气预报】
     url_daily = f"{API_HOST}/v7/weather/3d?location={LOCATION_ID}&key={QWEATHER_KEY}"
-    
-    # 3. 获取【生活指数】
     url_indices = f"{API_HOST}/v7/indices/1d?location={LOCATION_ID}&key={QWEATHER_KEY}&type=1,3,5"
-
-    # ... 后面的代码不变 ...
 
     try:
         # 1. 获取实时天气
         resp_now = requests.get(url_now).json()
         if 'code' not in resp_now or resp_now['code'] != '200':
-            print(f"❌ 实时天气请求失败，返回内容: {resp_now}") # <--- 这里会打印出真相
+            print(f"❌ 实时天气请求失败，返回内容: {resp_now}")
             return None
             
         # 2. 获取预报
@@ -136,4 +128,3 @@ if __name__ == "__main__":
     weather_html = get_weather_data()
     if weather_html:
         send_email(weather_html)
-
