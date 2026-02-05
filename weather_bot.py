@@ -4,21 +4,18 @@ from bs4 import BeautifulSoup
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+from email.utils import formataddr  # <--- 新增这个工具
 
 # ================= 配置区域 (QQ邮箱版) =================
-# 从环境变量读取账号密码
 MAIL_USER = os.environ.get("MAIL_USER")
 MAIL_PASS = os.environ.get("MAIL_PASS")
 
-# ⚠️ 在这里修改你想发给谁（可以写多个，用逗号隔开）
-# 比如：["你的号@qq.com", "女朋友@qq.com", "室友@163.com"]
+# 发给谁 (可以写多个)
 RECEIVERS = ["你的号@qq.com"] 
 # =======================================================
 
 def get_weather():
-    """
-    爬虫函数：抓取成都天气 (逻辑不变)
-    """
+    # ... (爬虫部分完全没变，为了省事我直接保留) ...
     print("🕷️ 正在爬取天气数据...")
     url = "http://www.weather.com.cn/weather/101270101.shtml"
     headers = {
@@ -34,7 +31,6 @@ def get_weather():
         date = today_node.find('h1').text
         weather = today_node.find('p', class_='wea').text
         
-        # 处理温度可能不存在的情况
         if today_node.find('span'):
             high_temp = today_node.find('span').text
         else:
@@ -43,7 +39,6 @@ def get_weather():
         low_temp = today_node.find('i').text
         wind = today_node.find('p', class_='win').find('i').text
 
-        # 组装成 HTML 格式，这样邮件里也是彩色的
         html_content = f"""
         <div style="font-family: '微软雅黑', sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
             <div style="background-color: #0099FF; padding: 20px; text-align: center; color: white;">
@@ -68,27 +63,30 @@ def get_weather():
         return None
 
 def send_email(content):
-    """
-    使用 SMTP 发送邮件
-    """
     print("🚀 正在连接 QQ 邮箱服务器...")
     
     if not MAIL_USER or not MAIL_PASS:
         print("❌ 错误：未找到邮箱账号或密码，请检查 GitHub Secrets！")
         return
 
-    # 邮件内容设置
+    # --- 关键修改开始 ---
     message = MIMEText(content, 'html', 'utf-8')
-    message['From'] = Header(f"天气助手 <{MAIL_USER}>", 'utf-8')
-    message['To'] = Header(",".join(RECEIVERS), 'utf-8')
+    
+    # 1. 发件人：使用 formataddr 标准化 (名字自动编码，邮箱保持原样)
+    # 这样服务器就不会被中文搞晕了
+    message['From'] = formataddr(("天气助手", MAIL_USER))
+    
+    # 2. 收件人：直接用字符串连接，不要加 Header 编码
+    # 否则服务器会看不懂 "abc@qq.com" 这个地址
+    message['To'] = ",".join(RECEIVERS)
+    
+    # 3. 主题：这个必须用 Header 编码，防止乱码
     message['Subject'] = Header('早安！今日天气提醒 ☀️', 'utf-8')
+    # --- 关键修改结束 ---
 
     try:
-        # 连接 QQ 邮箱 SMTP 服务器 (端口 465, 使用 SSL 安全连接)
         smtp_obj = smtplib.SMTP_SSL('smtp.qq.com', 465) 
-        # 登录
         smtp_obj.login(MAIL_USER, MAIL_PASS)
-        # 发送
         smtp_obj.sendmail(MAIL_USER, RECEIVERS, message.as_string())
         smtp_obj.quit()
         print("✅ 邮件发送成功！")
