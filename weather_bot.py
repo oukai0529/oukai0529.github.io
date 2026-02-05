@@ -1,5 +1,7 @@
 import os  # <--- 确保这一行在最上面
-
+import requests
+from bs4 import BeautifulSoup
+import datetime
 # ================= 配置区域 (修改版) =================
 # 从环境变量中读取密钥 (这样最安全)
 CORP_ID = os.environ.get("CORP_ID")
@@ -95,4 +97,5 @@ if __name__ == "__main__":
         print("-" * 30)
         send_wechat(weather_info)
     else:
+
         print("今天爬虫罢工了，没获取到数据。")
